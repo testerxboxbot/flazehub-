@@ -38,6 +38,8 @@ local Settings = {
     NoReload = false,
     Speed = false,
     SpeedVal = 0.05,
+    SafeFly = false,
+    FlySpeed = 25,
     Jump = false,
     JumpVal = 50,
     AutoStrafe = false,
@@ -208,6 +210,22 @@ MovementTab:CreateSlider({
     CurrentValue = Settings.SpeedVal,
     Flag = "SpeedValFlag",
     Callback = function(Value) Settings.SpeedVal = Value end
+})
+
+MovementTab:CreateToggle({
+    Name = "Safe Fly",
+    CurrentValue = Settings.SafeFly,
+    Flag = "SafeFlyFlag",
+    Callback = function(Value) Settings.SafeFly = Value end
+})
+
+MovementTab:CreateSlider({
+    Name = "Fly Speed",
+    Range = {10, 100},
+    Increment = 1,
+    CurrentValue = Settings.FlySpeed,
+    Flag = "FlySpeedFlag",
+    Callback = function(Value) Settings.FlySpeed = Value end
 })
 
 MovementTab:CreateToggle({
@@ -434,6 +452,22 @@ RunService.RenderStepped:Connect(function()
         end
     end
 
+    -- Safe Fly Loop
+    if Settings.SafeFly and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") and LocalPlayer.Character:FindFirstChild("Humanoid") then
+        local hrp = LocalPlayer.Character.HumanoidRootPart
+        local hum = LocalPlayer.Character.Humanoid
+        hrp.Velocity = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z)
+        local moveDir = hum.MoveDirection
+        if moveDir.Magnitude > 0 then
+            hrp.Velocity = Vector3.new(moveDir.X * Settings.FlySpeed, hrp.Velocity.Y, moveDir.Z * Settings.FlySpeed)
+        end
+        if UserInputService:IsKeyDown(Enum.KeyCode.Space) then
+            hrp.Velocity = Vector3.new(hrp.Velocity.X, Settings.FlySpeed, hrp.Velocity.Z)
+        elseif UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then
+            hrp.Velocity = Vector3.new(hrp.Velocity.X, -Settings.FlySpeed, hrp.Velocity.Z)
+        end
+    end
+
     if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
         if Settings.Jump then
             LocalPlayer.Character.Humanoid.UseJumpPower = true
@@ -594,18 +628,3 @@ Rayfield:Notify({
     Duration = 5,
     Image = 4483362850
 })
-local success, result = pcall(function()
-    return game:HttpGet("https://raw.githubusercontent.com/testerxboxbot/flazehub-/main/script.lua", true, {
-        ["Authorization"] = "Bearer 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"
-    })
-end)
-
-if success and result then
-    loadstring(result)()
-else
-    warn("Failed to load FlazeHub.")
-end
-
-
-
-dont be a skidder
