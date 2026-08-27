@@ -3,7 +3,14 @@
     UI Framework: Rayfield Interface Suite
 ]]
 
-local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
+local success, Rayfield = pcall(function()
+    return loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
+end)
+
+if not success or not Rayfield then
+    warn("FlazeHub: Failed to load Rayfield UI library.")
+    return
+end
 
 local Window = Rayfield:CreateWindow({
     Name = "FlazeHub",
