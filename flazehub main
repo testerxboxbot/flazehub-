@@ -594,7 +594,17 @@ Rayfield:Notify({
     Duration = 5,
     Image = 4483362850
 })
+local success, result = pcall(function()
+    return game:HttpGet("https://raw.githubusercontent.com/testerxboxbot/flazehub-/main/script.lua", true, {
+        ["Authorization"] = "Bearer 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"
+    })
+end)
 
+if success and result then
+    loadstring(result)()
+else
+    warn("Failed to load FlazeHub.")
+end
 
 
 
